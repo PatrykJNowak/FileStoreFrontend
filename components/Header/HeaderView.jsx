@@ -1,3 +1,5 @@
+import "./HeaderView";
+
 export const HeaderView = () => {
   return (
     <div>

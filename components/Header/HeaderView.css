@@ -1,0 +1,21 @@
+div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #121212; /* Tło w ciemnym kolorze */
+}
+
+h1 {
+  font-size: 4rem;
+  color: #76c7c0;
+  text-align: center;
+  font-weight: bold;
+  letter-spacing: 2px;
+  margin: 0;
+  padding: 20px;
+  background: linear-gradient(90deg, #76c7c0, #4a9b8d);
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 0 4px 6px rgba(0, 0, 0, 0.7); /* Dodanie cienia, aby tekst był bardziej wyrazisty */
+}

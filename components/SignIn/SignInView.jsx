@@ -25,7 +25,7 @@ export const SignInView = () => {
               navigate("/");
             } else {
               alert(
-                `Error code: ${response.status} with message: Login or password in invalid format`
+                `Error code: ${response.status} with message: Invalid login or password format`
               );
             }
           });

@@ -6,6 +6,7 @@ import { UploadFile } from "./UploadFile";
 import { CreateDirectory } from "./CreateDirectory";
 import { DeleteDirectory } from "./DeleteDirectory";
 import { GetUserData } from "./GetUserData";
+import "./GetDirectory.css";
 
 export const GetDirectory = (props) => {
   const [directoryId, setDirectoryId] = useState(props.directoryId || null);
@@ -84,6 +85,7 @@ export const GetDirectory = (props) => {
     reloadDirectories();
     reloadFiles();
     reloadUsedSize();
+    console.log(usedSize);
   }, [directoryId]);
 
   const handleDirectoryClick = (id) => {
@@ -106,7 +108,7 @@ export const GetDirectory = (props) => {
       <div>
         <a>
           Used size: {usedSize.file / 1000}MB from {usedSize.maxSize / 1000} MB
-          - {(usedSize.percentageFilledIn * 100).toFixed(2)}%
+          - {(Number(usedSize.precentageFilledIn) * 100).toFixed(2)}%
         </a>
       </div>
       <table>
@@ -114,6 +116,8 @@ export const GetDirectory = (props) => {
           <tr>
             <th>Name</th>
             <th>Created At</th>
+            <th>Open</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -152,8 +156,10 @@ export const GetDirectory = (props) => {
         <thead>
           <tr>
             <th>Name</th>
-            <th>Size</th>
+            <th>Size [KB]</th>
             <th>Created At</th>
+            <th>Download</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
