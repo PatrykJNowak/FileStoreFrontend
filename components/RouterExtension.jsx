@@ -20,6 +20,10 @@ export const Router = () => {
       path: "/file",
       element: <FileView />,
     },
+    {
+      path: "/login",
+      element: <LoginView />,
+    },
   ]);
 
   return (

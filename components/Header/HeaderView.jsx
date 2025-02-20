@@ -1,4 +1,5 @@
 import "./HeaderView";
+import "../Style/BaseStyle.css";
 
 export const HeaderView = () => {
   return (

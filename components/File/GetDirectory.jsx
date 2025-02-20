@@ -6,13 +6,14 @@ import { UploadFile } from "./UploadFile";
 import { CreateDirectory } from "./CreateDirectory";
 import { DeleteDirectory } from "./DeleteDirectory";
 import { GetUserData } from "./GetUserData";
-import "./GetDirectory.css";
+import { useNavigate } from "react-router-dom";
 
 export const GetDirectory = (props) => {
   const [directoryId, setDirectoryId] = useState(props.directoryId || null);
   const [, setHistory] = useState([]);
   const [directories, setDirectories] = useState([]);
   const [files, setFiles] = useState([]);
+  const navigate = useNavigate();
   const [usedSize, setUsedSize] = useState({
     file: 0,
     maxSize: 0,
@@ -30,16 +31,9 @@ export const GetDirectory = (props) => {
         authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     })
-      .then((response) => {
-        if (!response.ok) {
-          return response.json().then((body) => {
-            throw new Error(`Error: ${response.status}, ${body.errorMessage}`);
-          });
-        }
-        return response.json();
-      })
+      .then(handleApiResponse)
       .then((data) => setFiles(data))
-      .catch((error) => console.error("Error reloading files:", error));
+      .catch(handle401Response);
   };
 
   const reloadDirectories = () => {
@@ -53,16 +47,9 @@ export const GetDirectory = (props) => {
         authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     })
-      .then((response) => {
-        if (!response.ok) {
-          return response.json().then((body) => {
-            throw new Error(`Error: ${response.status}, ${body.errorMessage}`);
-          });
-        }
-        return response.json();
-      })
+      .then(handleApiResponse)
       .then((data) => setDirectories(data))
-      .catch((error) => console.error("Error reloading directories:", error));
+      .catch(handle401Response);
   };
 
   const reloadUsedSize = () => {
@@ -73,19 +60,33 @@ export const GetDirectory = (props) => {
         authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     })
-      .then((response) => {
-        if (!response.ok) throw new Error(`Failed to fetch used size`);
-        return response.json();
-      })
+      .then(handleApiResponse)
       .then((data) => setUsedSize(data))
-      .catch((error) => console.error("Error fetching used size:", error));
+      .catch(handle401Response);
+  };
+
+  const handle401Response = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
+  const handleApiResponse = async (response) => {
+    if (!response.ok) {
+      return response.json().then((body) => {
+        alert("Unauthorized. Moved to login page");
+        throw new Error(`Error: ${response.status}, ${body.errorMessage}`);
+      });
+    }
+    return response.json();
   };
 
   useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/login");
+    }
     reloadDirectories();
     reloadFiles();
     reloadUsedSize();
-    console.log(usedSize);
   }, [directoryId]);
 
   const handleDirectoryClick = (id) => {
@@ -166,7 +167,7 @@ export const GetDirectory = (props) => {
           {files.map((file) => (
             <tr key={file.id}>
               <td>{file.fileName}</td>
-              <td>{file.fileSize}</td>
+              <td>{file.fileSize.toLocaleString("pl-PL")}</td>
               <td>{moment(file.createdAt).format("DD.MM.YYYY HH:mm:SS")}</td>
               <td>
                 <DownloadFile fileId={file.id} fileName={file.fileName} />
